@@ -1,20 +1,21 @@
 import krews.core.*
 import krews.run
+import model.*
 import reactor.core.publisher.*
 import task.*
 
-fun main(args: Array<String>) = run(sampleWorkflow, args)
+fun main(args: Array<String>) = run(mnaseWorkflow, args)
 
-data class SampleParams(
-    val rangeMax: Int
+data class MNaseParams(
+    val samples: FastqSamples
 )
 
-val sampleWorkflow = workflow("sample-workflow") {
-    val params = params<SampleParams>()
+val mnaseWorkflow = workflow("mnase-workflow") {
 
-    val base64In = (1..params.rangeMax).toFlux().map { Base64Input(it) }
-    val base64Out = base64Task(base64In)
+    val params = params<MNaseParams>()
 
-    val zipIn = base64Out.map { ZipInput(it.base64File) }
-    zipTask(zipIn)
+    val trimAdaptorInputs = params.samples.replicates
+        .map { TrimAdaptorInput(it) }.toFlux()
+    val trimAdaptorTask = trimAdaptorTask(trimAdaptorInputs)
+
 }
