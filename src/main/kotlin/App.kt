@@ -7,16 +7,25 @@ import task.*
 fun main(args: Array<String>) = run(mnaseWorkflow, args)
 
 data class MNaseParams(
-    val samples: FastqSamples
+    val samples: Samples
 )
 
 val mnaseWorkflow = workflow("mnase-workflow") {
 
     val params = params<MNaseParams>()
 
-    val trimAdaptorInputs = params.samples.replicates
-        .map { TrimAdaptorInput(it) }
-	.toFlux()
+    val trimAdaptorInputs =
+	if (params.samples is FastqSamples) {
+	    params.samples.replicates
+		.map { TrimAdaptorInput(it) }
+		.toFlux()
+        } else {
+	    val fastaToFastqInputs = params.samples.replicates
+	        .map { FastaToFastqInput(it as FastaReplicate) }
+		.toFlux()
+	    val fastaToFastqOutputs = fastaToFastqTask(fastaToFastqInputs)
+	    fastaToFastqOutputs.map { TrimAdaptorInput(it.rep) }
+        }
     val trimAdaptorOutputs = trimAdaptorTask(trimAdaptorInputs)
 
     val bowtie2Input = trimAdaptorOutputs

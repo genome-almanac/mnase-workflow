@@ -2,16 +2,35 @@ package model
 
 import krews.file.File
 
-interface FastqSamples {
-    val replicates: List<FastqReplicate>
+interface Samples {
+    val replicates: List<Replicate>
+}
+
+interface FastaSamples : Samples {
+    override val replicates: List<FastaReplicate>
+}
+
+interface FastqSamples : Samples {
+    override val replicates: List<FastqReplicate>
 }
 
 data class FastqSamplesSE(override val replicates: List<FastqReplicateSE>) : FastqSamples
 data class FastqSamplesPE(override val replicates: List<FastqReplicatePE>) : FastqSamples
 
-interface FastqReplicate {
+interface Replicate {
     val name: String
 }
+
+interface FastqReplicate : Replicate {
+    override val name: String
+}
+
+data class FastaReplicate(
+    override val name: String,
+    val fasta: File,
+    val csqual: File,
+    val adaptor: File? = null
+) : Replicate
 
 data class FastqReplicateSE(override val name: String, val fastqs: List<File>, val adaptor: File? = null) : FastqReplicate
 data class FastqReplicatePE(
