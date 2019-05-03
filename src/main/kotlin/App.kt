@@ -15,7 +15,12 @@ val mnaseWorkflow = workflow("mnase-workflow") {
     val params = params<MNaseParams>()
 
     val trimAdaptorInputs = params.samples.replicates
-        .map { TrimAdaptorInput(it) }.toFlux()
-    val trimAdaptorTask = trimAdaptorTask(trimAdaptorInputs)
+        .map { TrimAdaptorInput(it) }
+	.toFlux()
+    val trimAdaptorOutputs = trimAdaptorTask(trimAdaptorInputs)
+
+    val bowtie2Input = trimAdaptorOutputs
+            .map { Bowtie2Input(it.mergedReplicate) }
+    val bowtie2Task = bowtie2Task(bowtie2Input)
 
 }
