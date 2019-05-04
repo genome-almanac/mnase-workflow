@@ -27,7 +27,11 @@ def main(argc, argv):
         with open(qualin, 'r') as qualfile:
             rec_iter = PairedFastaQualIterator(fastafile, qualfile)
             with open(argv[3], 'w') as o:
-                SeqIO.write(rec_iter, o, "fastq")
+                try:
+                    SeqIO.write(rec_iter, o, "fastq")
+                except:
+                    print("warning: skipped a record which failed to write", file = sys.stderr)
+                    pass
 
     return os.system("gzip %s" % argv[3])
 
