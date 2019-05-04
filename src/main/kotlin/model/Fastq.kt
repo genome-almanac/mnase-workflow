@@ -6,9 +6,9 @@ interface Samples {
     val replicates: List<Replicate>
 }
 
-interface FastaSamples : Samples {
+data class FastaSamples (
     override val replicates: List<FastaReplicate>
-}
+) : Samples
 
 interface FastqSamples : Samples {
     override val replicates: List<FastqReplicate>
