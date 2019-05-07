@@ -32,7 +32,7 @@ std::string dqual(const std::string& qualline) {
   std::string cint, out = "";
   std::stringstream s(qualline);
   while (std::getline(s, cint, ' ')) {
-    out += (char)(cint.compare("-1") == 0 ? 32 : std::atoi(cint.c_str()) + 32);
+    out += (char)(cint.compare("-1") == 0 ? 33 : std::atoi(cint.c_str()) + 33);
   }
   return out;
 }
