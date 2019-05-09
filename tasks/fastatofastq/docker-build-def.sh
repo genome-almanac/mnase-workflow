@@ -1,2 +1,2 @@
 IMAGE_NAME=genomealmanac/mnase-fastatofastq
-IMAGE_VERSION=1.0.2
+IMAGE_VERSION=1.0.7

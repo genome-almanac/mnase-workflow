@@ -1,6 +1,5 @@
 #
-# Dockerfile containing v1.10 of cutadapt
-# this is the final version to support csqual and csfasta inputs
+# Dockerfile for converting CSFASTA and CSQUAL pairs to FASTQ
 #
 
 FROM alpine:latest
@@ -8,5 +7,5 @@ FROM alpine:latest
 # scripts
 COPY src/ /app
 
-RUN apk add python py-pip python-dev build-base && pip install biopython && \
-	apk del py-pip python-dev build-base
+RUN apk add build-base libstdc++ && cd /app && g++ -std=c++11 convert.cpp -o fastatofastq && \
+    mv fastatofastq /bin && cd / && rm -rf /app && apk del build-base
