@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
   }
 
   double smoothing = std::atof(argv[2]);
-  char strand = argv[1].compare("+") == 0 ? '+' : (argv[1].compare("-") == 0 ? '-' : '.');
+  char strand = std::string(argv[1]).compare("+") == 0 ? '+' : (std::string(argv[1]).compare("-") == 0 ? '-' : '.');
   std::unordered_map<std::string, arma::Col<double>> values_;
   for (auto i = 4; i < argc; ++i) {
     bib::bamreader::BamReader b(argv[i]);
