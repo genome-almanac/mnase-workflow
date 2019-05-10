@@ -7,7 +7,8 @@ import task.*
 fun main(args: Array<String>) = run(mnaseWorkflow, args)
 
 data class MNaseParams(
-    val samples: Samples
+    val samples: Samples,
+    val experimentName: String
 )
 
 val mnaseWorkflow = workflow("mnase-workflow") {
@@ -30,6 +31,12 @@ val mnaseWorkflow = workflow("mnase-workflow") {
 
     val bowtie2Input = trimAdaptorOutputs
             .map { Bowtie2Input(it.mergedReplicate) }
-    val bowtie2Task = bowtie2Task(bowtie2Input)
+    val bowtie2Outputs = bowtie2Task(bowtie2Input)
+
+    val signalInput = bowtie2Outputs.collectList().map{ it -> SignalInput(
+        repName = params.experimentName,
+	bams = it.map { x -> x.bam }
+    )}
+    signalTask(signalInput)
 
 }
