@@ -15,20 +15,20 @@ data class FastaToFastqOutput(
 
 fun WorkflowBuilder.fastaToFastqTask(i: Publisher<FastaToFastqInput>) = this.task<FastaToFastqInput, FastaToFastqOutput>("fasta-to-fastq", i) {
 
-    dockerImage = "genomealmanac/mnase-fastatofastq:1.0.1"
+    dockerImage = "genomealmanac/mnase-fastatofastq:1.0.7"
 
     val rep = input.rep
     output = FastaToFastqOutput(
         FastqReplicateSE(
     	    name = rep.name,
 	    adaptor = rep.adaptor,
-	    fastqs = listOf(OutputFile("${rep.name}.fastq.gz"))
+	    fastqs = listOf(OutputFile("fastatofastq/${rep.name}.fastq"))
 	)
     )
 
     command =
             """
-            /app/convert.py \
-                ${rep.fasta.dockerPath} ${rep.csqual.dockerPath} ${rep.name}.fastq
+            fastatofastq \
+                ${rep.fasta.dockerPath} ${rep.csqual.dockerPath} $dockerDataDir/fastatofastq/${rep.name}.fastq
             """
 }

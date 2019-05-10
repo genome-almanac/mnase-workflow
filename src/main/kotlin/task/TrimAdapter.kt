@@ -21,7 +21,7 @@ data class TrimAdaptorOutput(
 fun WorkflowBuilder.trimAdaptorTask(i: Publisher<TrimAdaptorInput>) = this.task<TrimAdaptorInput, TrimAdaptorOutput>("trim-adapter", i) {
     val params = taskParams<TrimAdaptorParams>()
 
-    dockerImage = "genomealmanac/atacseq-trim-adapters:1.0.4"
+    dockerImage = "genomealmanac/mnase-trim-adapters:1.0.4"
 
     val rep = input.rep
     output =
