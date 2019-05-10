@@ -6,22 +6,25 @@
 
 int main(int argc, char **argv) {
 
-  if (argc < 3) {
-    std::cerr << "usage: mnasesignal out.wig *.bam\n";
+  if (argc < 5) {
+    std::cerr << "usage: mnasesignal strand smoothing out.wig *.bam\n";
     return 1;
   }
 
+  double smoothing = std::atof(argv[2]);
+  char strand = argv[1].compare("+") == 0 ? '+' : (argv[1].compare("-") == 0 ? '-' : '.');
   std::unordered_map<std::string, arma::Col<double>> values_;
-  for (auto i = 2; i < argc; ++i) {
+  for (auto i = 4; i < argc; ++i) {
     bib::bamreader::BamReader b(argv[i]);
+    b.read(strand);
     for (auto& kv : b.chromosomeValues()) {
       if (values_.find(kv.first) == values_.end())
-	values_[kv.first] = bib::gaussian::smooth(kv.second, 30.0);
+	values_[kv.first] = bib::gaussian::smooth(kv.second, smoothing);
       else {
 	auto& ovalues = values_[kv.first];
 	if (ovalues.size() < kv.second.size())
 	  ovalues.resize(kv.second.size());
-	auto svalues = bib::gaussian::smooth(kv.second, 30.0);
+	auto svalues = bib::gaussian::smooth(kv.second, smoothing);
 	for (auto i = 0; i < svalues.size(); ++i)
 	  ovalues[i] += svalues[i];
       }
