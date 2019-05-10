@@ -8,5 +8,5 @@ RUN apk add --no-cache build-base jsoncpp-dev zlib-dev cmake wget git lapack-dev
     git clone https://github.com/pezmaster31/bamtools && cd bamtools && mkdir build && \
     cd build && cmake .. && make && make install && cd ../.. && rm -r bamtools && \
     git clone https://gitlab.com/conradsnicta/armadillo-code && cd armadillo-code && \
-    cmake . && make && make install && cd .. && rm -r armadillo-code
-RUN cd /app && make && mv bin/* /bin && apk del build-base cmake wget git
+    cmake . && make && make install && cd .. && rm -r armadillo-code && \
+    cd /app && make && mv bin/* /bin && apk del build-base cmake wget git
